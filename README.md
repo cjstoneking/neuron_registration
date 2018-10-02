@@ -1,6 +1,6 @@
 # neuron_registration
 
-### register images of tissue slices to images 
+### register images of thin brain slices to images of the intact brain
 
 This project provides python and MATLAB implementations of the image registration algorithm described in Stoneking et al. (2018).
 
