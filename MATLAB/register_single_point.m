@@ -48,9 +48,9 @@ function [output_coords, output_angle, output_error] = register_single_point(ref
     %%
     if(abs(downsampling_factor - 1) > 10^(-6))
 
-        ref_volume = downsample_stack(ref_volume, downsampling_factor);
+        ref_volume = downsample_volume(ref_volume, downsampling_factor);
 
-        probe_volume  = downsample_stack(probe_volume, downsampling_factor);
+        probe_volume  = downsample_volume(probe_volume, downsampling_factor);
 
         ref_coords = ref_coords/downsampling_factor;
 
@@ -269,7 +269,54 @@ function [output_coords, output_angle, output_error] = register_single_point(ref
 
 
 
-  end
+end
+  
+
+% downsample_volume
+% downsample a 3D or 2D image by an integer factor
+% e.g. downsample_factor = 2 -> reduce size by 50%
+% this function is used instead of MATLAB's imresize
+% because imresize requires a toolbox license that can be limiting
+% when running in parallel on cluster
+function [output_volume] = downsample_volume(input_volume, downsample_factor)
+    
+old_size = size(input_volume);
+new_size = floor(old_size/downsample_factor);
+
+output_volume = zeros(new_size);
+
+if(length(old_size)==3)
+
+    for i = 1:size(output_volume, 1)
+        for j = 1:size(output_volume, 2)
+            for k = 1:size(output_volume, 3)
+                i1 = 1 + (i-1)*downsample_factor;
+                i2 = i1 + downsample_factor - 1;
+                j1 = 1 + (j-1)*downsample_factor;
+                j2 = j1 + downsample_factor - 1;
+                k1 = 1 + (k-1)*downsample_factor;
+                k2 = k1 + downsample_factor - 1;
+                input_block = input_volume(i1:i2, j1:j2, k1:k2);
+                output_volume(i,j,k) = mean(input_block(:));
+            end
+        end
+    end
+
+elseif(length(old_size)==2)
+    
+    for i = 1:size(output_volume, 1)
+        for j = 1:size(output_volume, 2)
+            i1 = 1 + (i-1)*downsample_factor;
+            i2 = i1 + downsample_factor - 1;
+            j1 = 1 + (j-1)*downsample_factor;
+            j2 = j1 + downsample_factor - 1;
+            input_block = input_volume(i1:i2, j1:j2);
+            output_volume(i,j) = mean(input_block(:));
+        end
+    end
+end
+
+end
 
 % register one 2D array to another via crosscorrelation
 function [output] = crosscor2D(buf1ft,buf2ft)
@@ -379,4 +426,41 @@ function [m2] = GP_predict(X1, y1, X2, sig, rho, stability_term)
     %compute mean of Gaussian process conditioned on observed values
     m2 = C21*((C11 + (added_noise_sd + stability_term)*eye(n1))\(y1 - mean(y1))) + mean(y1);
 
+end
+
+%%
+function [coords] = get_grid_coords(s, cell_size, cell_offset, center)
+
+%get coordinates of corners of cells spanning a volume of size s
+%cells have side length given by cell_size
+%and offset given by cell_offset
+
+%center = true: have grid centered in volume
+%so margins which we don't cover are equal on either side
+
+%center = false: have no margin at start
+%                append cell at end -> no margin at end, either
+
+
+    cell_size = floor(cell_size);
+    cell_offset = floor(cell_offset);
+
+    coords = {};
+
+    for i = 1:length(s)
+        c_i = 1:cell_offset:s(i);
+        c_i = c_i(c_i + cell_size - 1 < s(i));
+        if(center)
+            if(~isempty(c_i))
+                c_i = c_i + floor((s(i) - (c_i(end) + cell_size - 1))/2);
+            end
+        else
+            if((c_i(end) + cell_size) < s(i))
+                c_i(end+1) = s(i) - cell_size + 1;
+            end 
+        end
+        coords{i} = c_i;
+    end
+
+       
 end
