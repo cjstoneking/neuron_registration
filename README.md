@@ -3,7 +3,10 @@
 ### register images of tissue slices to images 
 
 This project provides python and MATLAB implementations of the image registration algorithm described in Stoneking et al. 2018.
-The algorithm enables images of thin histological slices of tissue to be registered against volume images of the same tissue that were previously acquired *in vivo* - i.e. it infers a transform that warps the slices to the volume. data from histology to be integrated with data obtained *in vivo*. One possible application would be to integrate in vivo functional imaging of neural activity with ex vivo antibody staining or in situ sequencing. 
-The method is designed to handle thin (effectively 2D) slices, missing data, varying image modalities and nonlinear deformation. In particular, the ability to cope with missing data allows this method to be used on thin tissue slices which usually do not perfectly preserve the structures present in the original tissue.
+The algorithm addresses an increasingly common problem in neuroscience: many questions require the experimenter to first perform functional imaging of neural activity *in vivo*, and subsequently to investigate neuroanatomy and/or cellular properties *ex vivo*. To fully exploit the resulting data, it is necessary to identify the same individual neurons in both datasets, i.e. to register images of brain slices acquired *ex vivo* to volume images acquired *in vivo*, with cellular resolution. However, this can be difficult when the slices involved are thin, because they often do not perfectly preserve the structures present in the original tissue.
+In response, this algorithm was designed to handle input with a substantial degree of missing data, as well as image modalities that differ between *in vivo* and *ex vivo*, and nonlinear deformation of the slice relative to the volume. 
 
 ![single_point_registration_figure](figures/single_point_registration_figure.png?raw=true "Registration at a single point")
+
+Example registration at a single point: local features in a tissue slice (A) are used to identify the best match in the corresponding volume image (B). (C) shows the location of this match within the larger image volume.
+
