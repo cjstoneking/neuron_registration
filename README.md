@@ -9,7 +9,7 @@ In response, this algorithm was designed perform slice-to-volume image registrat
 
 ![single_point_registration_figure](figures/single_point_registration_figure.png?raw=true "Registration at a single point")
 
-Example registration at a single point: local features in an image of a tissue slice (A) are used to identify the best match in the corresponding volume image (B). (C) shows the location of this match within the larger image volume.
+Example registration at a single point: local features in an image of a tissue slice (A) are used to identify the best match in the corresponding volume image (B). (C) shows the location of this match within the larger image volume. The signal in these images is from labeled blood vessels.
 
 The registration process involves first performing a number of single-point registrations, in which a single point in the slice is chosen and its best match in the volume is identified. This is achieved by maximizing local cross-correlation, using a Bayesian optimization approach to minimize computation time. An example single-point registration is shown above.
 In the second stage, a global registration between the slice and the volume is obtained by interpolating between the single-point registrations. We provide two different interpolation options: *best-fitting plane*, which is appropriate if the slice has little nonlinear deformation relative to the volume, and *Gaussian process*, which can capture nonlinear deformation by estimating a smooth nonlinear transform.
@@ -17,4 +17,4 @@ In the second stage, a global registration between the slice and the volume is o
 
 ![interpolation_figure](figures/interpolation_figure.png?raw=true "Interpolation result")
 
-Example reconstruction of a slice image from a volume image, based on interpolation from multiple single-point correspondences. (A) shows the original slice image, red circles mark points that were registered to the 3D volume. (B) shows a reconstruction of the slice from the 3D volume, based on the best-fitting plane. Differences in fluorescence in the slice seem to be genuine features of the data, most likely due to a time gap between the acquisition of the two datasets.
+Example reconstruction of a slice image from a volume image, based on interpolation from multiple single-point correspondences. (A) shows the original slice image, red circles mark points that were registered to the 3D volume. (B) shows a reconstruction of the slice from the 3D volume, based on the best-fitting plane. The signal in these images is from labeled neurons. Differences in fluorescence in the slice are due to differences in the signal from individual cells and seem to be genuine features of the data, most likely due to a time gap between the acquisition of the two datasets.
