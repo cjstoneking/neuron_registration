@@ -2,7 +2,7 @@
 
 ### register images of thin brain slices to images of the intact brain
 
-This project provides python and MATLAB implementations of the image registration algorithm described in Stoneking et al. (2018).
+This project provides python and MATLAB implementations of the image registration algorithm described in Stoneking et al. (2019).
 
 The algorithm addresses an increasingly common problem in neuroscience: many questions require the experimenter to first perform functional imaging of neural activity *in vivo*, and subsequently to investigate neuroanatomy and/or cellular properties *ex vivo*. To fully exploit the resulting data, it is necessary to identify the same individual neurons in both datasets. This can be achieved by registering images of brain slices acquired *ex vivo* to volume images acquired *in vivo*, i.e. identifying matching features in these sets of images and thus estimating a transform that maps the slices to the volume. Although registration is a common image analysis problem, it can be challenging in this case because the slices involved may be quite thin, and often do not perfectly preserve the structures present in the original tissue.
 In response, this algorithm was designed perform slice-to-volume image registration on input with a substantial degree of missing data. It is robust enough to handle image modalities that differ between *in vivo* and *ex vivo*, and flexible enough to infer nonlinear deformation of the slice relative to the volume. 
